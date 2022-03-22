@@ -190,7 +190,7 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
   shiny::observeEvent(INPUT$go_fill_pdf, {
 
     shiny::removeModal()
-
+    browser()
     ##download file to fill
     pdf_url <- "https://github.com/brucemoran/NVB1shiny/raw/master/inst/extdata/Garda_eVetting_SI_fillable.pdf"
     pdf_tmp <- tempfile()
