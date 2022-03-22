@@ -44,7 +44,7 @@ obsev_manual <- function(INPUT, VALS){
   shiny::observeEvent(INPUT$manual, ignoreInit = TRUE, ignoreNULL = TRUE, {
 
     VALS$CSV <- readr::read_csv(system.file("extdata", "example_input.csv",
-                                            package = "NVB1shiny"))
+                                            package = "NVB1_fillout"))
 
     if(dim(VALS$CSV)[1] > 0){
       modal_fill_pdf(INPUT, VALS$CSV)
@@ -190,7 +190,7 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
 
     ##fill
     pdff <- system.file("extdata", "Garda_eVetting_SI_fillable.pdf",
-                        package = "NVB1shiny")
+                        package = "NVB1_fillout")
 
     pdf_f <- staplr::get_fields(pdff)
 
