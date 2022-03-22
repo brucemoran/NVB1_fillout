@@ -129,7 +129,8 @@ create_inputs <- function(INPUT, VALSCSV, colname){
     return(selectizeInput(inputId = paste0(colname, "_fill"),
                           label = colname,
                           multiple = FALSE,
-                          choices = c("Scouter",
+                          selected = "SCOUTER",
+                          choices = toupper(c("Scouter",
                                       "Scouter/Rover Scout",
                                       "Rover Scout",
                                       "Venture Scout",
@@ -139,10 +140,8 @@ create_inputs <- function(INPUT, VALSCSV, colname){
                                       "Adult Supporter – Group Quartermaster",
                                       "Adult Supporter – Spiritual Advisor",
                                       "Adult Supporter – Band Member",
-                                      "Adult Supporter – Special Needs As."),
-                          options = list(
-                            onInitialize = I('function() { this.setValue("Scouter"); }')
-                          )))
+                                      "Adult Supporter – Special Needs As."))))
+
   }
 }
 
