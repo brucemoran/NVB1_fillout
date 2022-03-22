@@ -194,7 +194,9 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     ##download file to fill
     pdf_url <- "https://github.com/brucemoran/NVB1shiny/raw/master/inst/extdata/Garda_eVetting_SI_fillable.pdf"
     pdf_tmp <- tempfile()
+    print(pdf_url)
     utils::download.file(pdf_url, pdf_tmp, mode = "wb")
+    print(pdf_tmp)
     pdf_f <- staplr::get_fields(pdf_tmp)
     print(pdf_f)
 
