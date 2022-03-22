@@ -45,6 +45,10 @@ obsev_manual <- function(INPUT, VALS){
     VALS$CSV <- readr::read_csv(system.file("extdata",
                                             "example_input.csv",
                                             package = "NVB1shiny"))
+    csv_url <- "https://github.com/brucemoran/NVB1shiny/raw/master/inst/extdata/example_input.csv"
+    csv_tmp <- tempfile()
+    utils::download.file(csv_url, csv_tmp)
+    VALS$CSV <- readr::read_csv(utils::download.file(pdf_url, csv_tmp))
 
     if(dim(VALS$CSV)[1] > 0){
       modal_fill_pdf(INPUT, VALS$CSV)
@@ -187,13 +191,11 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
 
     shiny::removeModal()
 
-    ##fill
-    print("here")
-    pdff <- system.file("extdata",
-                        "Garda_eVetting_SI_fillable.pdf",
-                        package = "NVB1shiny")
-
-    pdf_f <- staplr::get_fields(pdff)
+    ##download file to fill
+    pdf_url <- "https://github.com/brucemoran/NVB1shiny/raw/master/inst/extdata/Garda_eVetting_SI_fillable.pdf"
+    pdf_tmp <- tempfile()
+    utils::download.file(pdf_url, pdf_tmp, mode = "wb")
+    pdf_f <- staplr::get_fields(pdf_tmp)
     print(pdf_f)
 
     ##what names in input are available to be split
