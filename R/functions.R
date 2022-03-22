@@ -112,7 +112,6 @@ create_inputs <- function(INPUT, VALSCSV, colname){
   }
 
   if(colname %in% "Consent_cbox"){
-    print(VALSCSV[[colname]])
     if(VALSCSV[["Consent_cbox"]] == "Accept"){
       valu <- TRUE
     } else {
@@ -194,6 +193,7 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
                         package = "NVB1shiny")
 
     pdf_f <- staplr::get_fields(pdff)
+    print(pdf_f)
 
     ##what names in input are available to be split
     inp_nam <- gsub("_fill", "", grep("_fill", names(INPUT), value = TRUE))
@@ -204,8 +204,6 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
       rnid <- split_name_vec()[f]
       rnss <- strsplit(gsub("\\+353", "", INPUT[[paste0(f, "_fill")]]), "")[[1]]
 
-      print(rnss)
-      print(INPUT[[paste0(f, "_fill")]])
       rvec <- nvec <- c()
       if(rnid %in% c("Ds_d_", "Ds_m_",
                      "Dob_d_", "Dob_m_",
