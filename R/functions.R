@@ -190,16 +190,12 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
   shiny::observeEvent(INPUT$go_fill_pdf, {
 
     shiny::removeModal()
-    browser()
     ##download file to fill
     pdf_url <- "https://github.com/brucemoran/NVB1shiny/raw/master/inst/extdata/Garda_eVetting_SI_fillable.pdf"
     pdf_tmp <- tempfile()
-    print(pdf_url)
     utils::download.file(pdf_url, pdf_tmp, mode = "wb")
-    print(pdf_tmp)
     pdf_f <- staplr::get_fields(pdf_tmp)
-    print(pdf_f)
-
+    print(names(pdf_f))
     ##what names in input are available to be split
     inp_nam <- gsub("_fill", "", grep("_fill", names(INPUT), value = TRUE))
     pdf_snv <- inp_nam[inp_nam %in% names(split_name_vec())]
@@ -207,7 +203,7 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
 
     pdf_list <- lapply(pdf_snv, function(f){
       rnid <- split_name_vec()[f]
-      rnss <- strsplit(gsub("\\+353", "", INPUT[[paste0(f, "_fill")]]), "")[[1]]
+      rnss <- strsplit(gsub("^353", "", gsub("^\\+", "", INPUT[[paste0(f, "_fill")]])), "")[[1]]
 
       rvec <- nvec <- c()
       if(rnid %in% c("Ds_d_", "Ds_m_",
@@ -226,6 +222,11 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
       if(rnid %in% c("Co_")){
         if(length(rnss) == 9){
           rnss <- c(0, rnss)
+        }
+      }
+      if(rnid %in% c("Ec_")){
+        if(length(rnss) > 7){
+          rnss <- grep(" ", rnss, value = TRUE, invert = TRUE)
         }
       }
       for(x in 1:length(rnss)){
@@ -249,8 +250,9 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     levels(pdf_f$Consent_cbox$value) <- c("Off", "Yes")
     pdf_f$Name_approver$value <-  INPUT[["Name_approver_fill"]]
     pdf_f$Name_doc$value <-  INPUT[["Name_doc_fill"]]
+    print(pdf_f)
 
-    staplr::set_fields(input_filepath = pdff,
+    staplr::set_fields(input_filepath = pdf_tmp,
                        fields = pdf_f,
                        overwrite = TRUE)
   })
