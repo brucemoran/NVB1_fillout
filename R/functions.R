@@ -224,7 +224,7 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
           rnss <- c(0, rnss)
         }
       }
-      if(rnid %in% c("Ec_")){
+      if(rnid %in% c("Ec_", "Ec_o_")){
         if(length(rnss) > 7){
           rnss <- grep(" ", rnss, value = TRUE, invert = TRUE)
         }
