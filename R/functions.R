@@ -188,6 +188,7 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     shiny::removeModal()
 
     ##fill
+    print("here")
     pdff <- system.file("extdata",
                         "Garda_eVetting_SI_fillable.pdf",
                         package = "NVB1shiny")
@@ -246,7 +247,6 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     pdf_f$Name_doc$value <-  INPUT[["Name_doc_fill"]]
 
     staplr::set_fields(input_filepath = pdff,
-                       output_filepath = NULL,
                        fields = pdf_f,
                        overwrite = TRUE)
   })
