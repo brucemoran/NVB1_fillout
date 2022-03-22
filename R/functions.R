@@ -44,7 +44,7 @@ obsev_manual <- function(INPUT, VALS){
 
     VALS$CSV <- readr::read_csv(system.file("extdata",
                                             "example_input.csv",
-                                            package = "NVB1_fillout"))
+                                            package = "NVB1shiny"))
 
     if(dim(VALS$CSV)[1] > 0){
       modal_fill_pdf(INPUT, VALS$CSV)
@@ -191,7 +191,7 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     ##fill
     pdff <- system.file("extdata",
                         "Garda_eVetting_SI_fillable.pdf",
-                        package = "NVB1_fillout")
+                        package = "NVB1shiny")
 
     pdf_f <- staplr::get_fields(pdff)
 
