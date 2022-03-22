@@ -8,8 +8,9 @@ Description: Makes a PDF in NVB1 format from CSV data, to connect to Google Form
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Depends: 
+Depends:
     R (>= 2.10),
     staplr,
-    shiny
+    shiny,
+    readr
 RoxygenNote: 7.1.2
