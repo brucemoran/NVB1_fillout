@@ -22,7 +22,6 @@ obsev_FILENAMES <- function(INPUT, VALS){
   shiny::observeEvent(INPUT$FILENAMES, ignoreInit = TRUE, ignoreNULL = TRUE, {
 
     VALS$CSV <- readr::read_csv(INPUT$FILENAMES$datapath[1])
-    VALS$OUT <- paste0(path.expand("~/Downloads/"), gsub("csv", "pdf", unlist(INPUT$FILENAMES$name)))
 
     if(dim(VALS$CSV)[1] > 0){
       modal_fill_pdf(INPUT, VALS$CSV)
@@ -43,7 +42,8 @@ obsev_manual <- function(INPUT, VALS){
 
   shiny::observeEvent(INPUT$manual, ignoreInit = TRUE, ignoreNULL = TRUE, {
 
-    VALS$CSV <- readr::read_csv(system.file("extdata", "example_input.csv",
+    VALS$CSV <- readr::read_csv(system.file("extdata",
+                                            "example_input.csv",
                                             package = "NVB1_fillout"))
 
     if(dim(VALS$CSV)[1] > 0){
@@ -189,7 +189,8 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     shiny::removeModal()
 
     ##fill
-    pdff <- system.file("extdata", "Garda_eVetting_SI_fillable.pdf",
+    pdff <- system.file("extdata",
+                        "Garda_eVetting_SI_fillable.pdf",
                         package = "NVB1_fillout")
 
     pdf_f <- staplr::get_fields(pdff)
@@ -246,15 +247,8 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     pdf_f$Name_approver$value <-  INPUT[["Name_approver_fill"]]
     pdf_f$Name_doc$value <-  INPUT[["Name_doc_fill"]]
 
-    if(is.null(VALS$OUT)){
-      VALS$OUT <- paste0(path.expand("~/Downloads/"),
-                         gsub(" ", "_", pdf_f$Name_doc$value),
-                         "_", INPUT[["IDcheck_day_doc_fill"]],
-                         "-", INPUT[["IDcheck_month_doc_fill"]],
-                         "-", INPUT[["IDcheck_year_doc_fill"]], ".pdf")
-    }
     staplr::set_fields(input_filepath = pdff,
-                       output_filepath = VALS$OUT,
+                       output_filepath = NULL,
                        fields = pdf_f,
                        overwrite = TRUE)
   })
