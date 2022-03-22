@@ -42,13 +42,10 @@ obsev_manual <- function(INPUT, VALS){
 
   shiny::observeEvent(INPUT$manual, ignoreInit = TRUE, ignoreNULL = TRUE, {
 
-    VALS$CSV <- readr::read_csv(system.file("extdata",
-                                            "example_input.csv",
-                                            package = "NVB1shiny"))
     csv_url <- "https://github.com/brucemoran/NVB1shiny/raw/master/inst/extdata/example_input.csv"
     csv_tmp <- tempfile()
     utils::download.file(csv_url, csv_tmp)
-    VALS$CSV <- readr::read_csv(utils::download.file(pdf_url, csv_tmp))
+    VALS$CSV <- readr::read_csv(csv_tmp)
 
     if(dim(VALS$CSV)[1] > 0){
       modal_fill_pdf(INPUT, VALS$CSV)
@@ -65,24 +62,26 @@ obsev_manual <- function(INPUT, VALS){
 
 modal_fill_pdf <- function(INPUT, VALSCSV){
 
-    col_names <- colnames(VALSCSV)
-    leng <- 1:length(col_names)
-    spleng <- split(leng, ceiling(seq_along(leng)/(length(leng)/3)))
+    col_names <- grep("REF", colnames(VALSCSV), value = TRUE, invert = TRUE)
+    leng <- length(col_names)
+    spleng <- list(aa = c(1:5, 7:11),
+                   ba = c(12:19, 6),
+                   ca = c(20:leng))
 
     showModal(
       modalDialog(title = "NVB1 Fillout",
         column(12,
-         column(4, lapply(spleng$`1`, function(f){
+         column(4, lapply(spleng$aa, function(f){
            create_inputs(INPUT = INPUT,
                          VALSCSV = VALSCSV,
                          colname = col_names[f])})
          ),
-         column(4, lapply(spleng$`2`, function(f){
+         column(4, lapply(spleng$ba, function(f){
            create_inputs(INPUT = INPUT,
                          VALSCSV = VALSCSV,
                          colname = col_names[f])})
          ),
-         column(4, lapply(spleng$`3`, function(f){
+         column(4, lapply(spleng$ca, function(f){
            create_inputs(INPUT = INPUT,
                          VALSCSV = VALSCSV,
                          colname = col_names[f])})
@@ -126,7 +125,7 @@ create_inputs <- function(INPUT, VALSCSV, colname){
                           value = TRUE))
   }
 
-  if(colname %in% "Ro"){
+  if(colname %in% "Role"){
     return(selectizeInput(inputId = paste0(colname, "_fill"),
                           label = colname,
                           multiple = FALSE,
@@ -137,10 +136,10 @@ create_inputs <- function(INPUT, VALSCSV, colname){
                                       "Adult Supporter – Group Chairperson",
                                       "Adult Supporter – Group Secretary",
                                       "Adult Supporter – Group Treasurer",
-                                      "Adult Supporter – Group Quartermaster/Bo’sun (Sea Scouts)",
+                                      "Adult Supporter – Group Quartermaster",
                                       "Adult Supporter – Spiritual Advisor",
-                                      "Adult Supporter – Band Member/Entertainments Facilitator",
-                                      "Adult Supporter – Special Needs Assistant"),
+                                      "Adult Supporter – Band Member",
+                                      "Adult Supporter – Special Needs As."),
                           options = list(
                             onInitialize = I('function() { this.setValue("Scouter"); }')
                           )))
@@ -255,5 +254,15 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     staplr::set_fields(input_filepath = pdf_tmp,
                        fields = pdf_f,
                        overwrite = TRUE)
+
+    shiny::showModal(
+      shiny::modalDialog(
+        title = "Success, your PDF should be in the saved location",
+        easyClose = TRUE,
+        footer = tagList(
+         shiny::modalButton("Continue")
+        )
+      )
+    )
   })
 }
