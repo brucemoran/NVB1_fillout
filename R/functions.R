@@ -258,8 +258,9 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     print(paste0("Data saved: ", VALS$outpath))
     VALS$pdf_url <- pdf_url
     VALS$pdf_f <- pdf_f
+    VALS$tmp_out <- tempfile(fileext = "pdf")
     staplr::set_fields(input_filepath = VALS$pdf_url,
-                       output_filepath = VALS$outpath,
+                       output_filepath = VALS$tmp_out,
                        fields = VALS$pdf_f,
                        overwrite = TRUE)
     shiny::showModal(
@@ -289,7 +290,7 @@ obsev_go_get_pdf <- function(INPUT, OUTPUT, VALS){
         basename(VALS$outpath)
       },
       content = function(file) {
-        file.copy(VALS$outpath, file)
+        file.copy(VALS$tmp_out, file)
       }
     )
     shinyjs::runjs("document.getElementById('downloadData').click();")
