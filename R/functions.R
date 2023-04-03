@@ -21,7 +21,8 @@ obsev_FILENAMES <- function(INPUT, VALS){
 
   shiny::observeEvent(INPUT$FILENAMES, ignoreInit = TRUE, ignoreNULL = TRUE, {
 
-    VALS$CSV <- readr::read_csv(INPUT$FILENAMES$datapath[1])
+    VALS$input_file <- INPUT$FILENAMES$datapath[1]
+    VALS$CSV <- readr::read_csv(VALS$input_file)
 
     if(dim(VALS$CSV)[1] > 0){
       modal_fill_pdf(INPUT, VALS$CSV)
@@ -42,8 +43,8 @@ obsev_manual <- function(INPUT, VALS){
 
   shiny::observeEvent(INPUT$manual, ignoreInit = TRUE, ignoreNULL = TRUE, {
 
-    csv_url <- system.file(package = "NVB1shiny", "extdata", "example_input.csv")
-    VALS$CSV <- readr::read_csv(csv_url)
+    VALS$input_file <- system.file(package = "NVB1shiny", "extdata", "example_input.csv")
+    VALS$CSV <- readr::read_csv(VALS$input_file)
 
     if(dim(VALS$CSV)[1] > 0){
       modal_fill_pdf(INPUT, VALS$CSV)
@@ -252,20 +253,21 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     ##output
     fnam <- paste(unlist(lapply(pdf_f[grep("Fn",names(pdf_f))], function(fc){if(fc$value!=""){fc$value}})), collapse = "")
     snam <- paste(unlist(lapply(pdf_f[grep("Sn",names(pdf_f))], function(fc){if(fc$value!=""){fc$value}})), collapse = "")
-    VALS$outpath <- paste0(dirname(INPUT$FILENAMES$datapath[1]), "/",
+    VALS$outpath <- paste0(dirname(VALS$input_file), "/",
                       fnam, "_", snam, "_GV_", Sys.Date(), ".pdf")
-
-    staplr::set_fields(input_filepath = pdf_url,
+    print(paste0("Data saved: ", VALS$outpath))
+    VALS$pdf_url <- pdf_url
+    VALS$pdf_f <- pdf_f
+    staplr::set_fields(input_filepath = VALS$pdf_url,
                        output_filepath = VALS$outpath,
-                       fields = pdf_f,
+                       fields = VALS$pdf_f,
                        overwrite = TRUE)
-
     shiny::showModal(
       shiny::modalDialog(
         title = "Success! Your PDF is available to Download:\n\n",
         easyClose = TRUE,
         footer = tagList(
-         shiny::downloadButton("go_get_pdf", "Download PDF")
+         shiny::actionButton("go_get_pdf", "Download PDF")
         )
       )
     )
@@ -283,12 +285,13 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
 obsev_go_get_pdf <- function(INPUT, OUTPUT, VALS){
   shiny::observeEvent(INPUT$go_get_pdf, {
     OUTPUT$downloadData <- downloadHandler(
-    filename = function() {
-      basename(VALS$outpath)
-    },
-    content = function(file) {
-      VALS$outpath
-    }
-  )
+      filename = function() {
+        basename(VALS$outpath)
+      },
+      content = function(file) {
+        file.copy(VALS$outpath, file)
+      }
+    )
+    shinyjs::runjs("document.getElementById('downloadData').click();")
   })
 }

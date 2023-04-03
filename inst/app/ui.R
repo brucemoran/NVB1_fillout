@@ -1,10 +1,7 @@
 shiny::fluidPage(
+  shinyjs::useShinyjs(),
   shiny::headerPanel("SI Garda Vetting NVB1 Filling Application"),
   shiny::sidebarLayout(
-    conditionalPanel(
-      "false", # always hide the download button for PDF
-      downloadButton("downloadData")
-    ),
     shiny::sidebarPanel(width=12,
                         shiny::splitLayout(
                           shiny::fileInput(
@@ -16,6 +13,7 @@ shiny::fluidPage(
                             placeholder = NULL),
                           shiny::actionButton("manual", "Enter Data Manually")
                         ),
+                        shiny::downloadButton("downloadData", "Download", style = "visibility: hidden;")
     ),
     shiny::mainPanel()
   )
