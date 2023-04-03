@@ -189,7 +189,6 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     ##download file to fill
     pdf_url <- system.file(package = "NVB1shiny", "extdata", "Garda_eVetting_SI_fillable.pdf")
     pdf_f <- staplr::get_fields(pdf_url)
-    print(names(pdf_f))
     ##what names in input are available to be split
     inp_nam <- gsub("_fill", "", grep("_fill", names(INPUT), value = TRUE))
     pdf_snv <- inp_nam[inp_nam %in% names(split_name_vec())]
@@ -249,7 +248,6 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     levels(pdf_f$Consent_cbox$value) <- c("Off", "Yes")
     pdf_f$Name_approver$value <-  INPUT[["Name_approver_fill"]]
     pdf_f$Name_doc$value <-  INPUT[["Name_doc_fill"]]
-    print(pdf_f)
 
     staplr::set_fields(input_filepath = pdf_url,
                        fields = pdf_f,
