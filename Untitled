@@ -1,0 +1,46 @@
+na_dash <- function (x) {
+  x[is.na(x)] <- "-"
+  return(x)
+}
+VALS_DATA$Extr <- VALS_DATA$Run
+drna_conc <- SVUHMolLIMS::mod_check_drna(INPUT, VALS_DATA)
+max_run_wk <- max(unlist(VALS_DATA$Extr$run_week))
+  check_extr <- dplyr::filter(.data = VALS_DATA$Extr,
+                              run_week %in% max_run_wk,
+                              spec_block %in% "Controls")
+VALS_DATA$Extr <- rbind(c(NA, max_run_wk, "Controls", rep(NA, 7),
+                          2.5, 2.5, NA, "-", "Acrometrix + SeraSeq controls",
+                          toupper(INPUT$username), "Running", rep(NA, 5), "Controls"), VALS_DATA$Extr)
+dp_list <- SVUHMolLIMS::dilu_plate_setup(INPUT, VALS_DATA)
+VALS_DATA$Dilu_plate <- na_dash(rbind(dp_list[[1]],
+                                    do.call(cbind,
+                                            list(dp_list[[2]][,1:4],
+                                                 dp_list[[3]][,5:7],
+                                                 dp_list[[4]][,8:10],
+                                                 dp_list[[5]][,11:13]))))
+VALS_DATA$Extr$barcode <- SVUHMolLIMS::barcode_set(START_BARCODE = INPUT$barc_set,
+                           LENGTH = length(na.omit(VALS_DATA$Extr$lab_id)))
+
+nc_bc <- dplyr::filter(.data = VALS_DATA$Extr,
+                       !lab_id %in% "Controls",
+                       lab_id %in% unlist(VALS_DATA$Extr$lab_id))
+VALS_DATA$Data[VALS_DATA$Data$lab_id %in% unlist(nc_bc$lab_id),"barcode"] <- VALS_DATA$Run[VALS_DATA$Run$lab_id %in% unlist(nc_bc$lab_id),"barcode"] <- nc_bc$barcode
+bp_list <- SVUHMolLIMS::barcode_plate_setup(INPUT, VALS_DATA)
+VALS_DATA$Barc_plate <- na_dash(rbind(bp_list[[1]],
+                                do.call(cbind,
+                                        list(bp_list[[2]][,1:4],
+                                             bp_list[[3]][,5:7],
+                                             bp_list[[4]][,8:10],
+                                             bp_list[[5]][,11:13]))))
+VALS_DATA$Runplan <- SVUHMolLIMS::apply_run_plan(
+                                    TABLE = VALS_DATA$Extr,
+                                    BARCKIT = VALS_DATA$run_barckit)
+VALS_DATA$Runplan_list <- SVUHMolLIMS::split_run_plan(
+                                          RUNPLAN = VALS_DATA$Runplan,
+                                          DL8 = INPUT$run_type == "DL8",
+                                          FIRST_BARC = "DNA")
+
+
+
+full_list <- unlist(VALS_DATA$Runplan_list, recursive = FALSE)
+FULL_LIST <- full_list

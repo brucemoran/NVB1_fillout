@@ -227,6 +227,11 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
           rnss <- grep(" ", rnss, value = TRUE, invert = TRUE)
         }
       }
+      if(rnid %in% c("Em_")){
+        if(length(rnss) > 25){
+          rnss <- c(rnss[1:25], paste(rnss[26:length(rnss)], collapse = ""))
+        }
+      }
       for(x in 1:length(rnss)){
         nvec <- c(nvec, paste0(rnid, x))
         rvec <- c(rvec, "Text", paste0(rnid, x), rnss[x])
