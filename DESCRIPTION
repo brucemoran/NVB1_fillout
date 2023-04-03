@@ -1,6 +1,6 @@
 Package: NVB1shiny
 Type: Package
-Title: Fill NVB1 from CSV file
+Title: Shiny App to Fill NVB1 from CSV file
 Version: 0.1.0
 Author: Bruce Moran
 Maintainer: The package maintainer <bruce01campus@gmail.com>
@@ -13,4 +13,4 @@ Depends:
     staplr,
     shiny,
     readr
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
