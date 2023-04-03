@@ -251,7 +251,7 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     pdf_f$Name_doc$value <-  INPUT[["Name_doc_fill"]]
     print(pdf_f)
 
-    staplr::set_fields(input_filepath = pdf_tmp,
+    staplr::set_fields(input_filepath = pdf_url,
                        fields = pdf_f,
                        overwrite = TRUE)
 
