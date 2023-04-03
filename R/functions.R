@@ -187,6 +187,7 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
 
     shiny::removeModal()
     ##download file to fill
+    browser()
     pdf_url <- system.file(package = "NVB1shiny", "extdata", "Garda_eVetting_SI_fillable.pdf")
     pdf_f <- staplr::get_fields(pdf_url)
     ##what names in input are available to be split
@@ -247,9 +248,16 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     pdf_f$Consent_cbox$value <- ifelse(INPUT[["Consent_cbox_fill"]] == TRUE, "Yes", "Off")
     levels(pdf_f$Consent_cbox$value) <- c("Off", "Yes")
     pdf_f$Name_approver$value <-  INPUT[["Name_approver_fill"]]
-    pdf_f$Name_doc$value <-  INPUT[["Name_doc_fill"]]
+    pdf_f$Name_doc$value <- INPUT[["Name_doc_fill"]]
+
+    ##output
+    fnam <- paste(unlist(lapply(pdf_f[grep("Fn",names(pdf_f))], function(fc){if(fc$value!=""){fc$value}})), collapse = "")
+    snam <- paste(unlist(lapply(pdf_f[grep("Fn",names(pdf_f))], function(fc){if(fc$value!=""){fc$value}})), collapse = "")
+    outpath <- paste0(dirname(INPUT$FILENAMES$datapath[1]), "/",
+                      fnam, "_", snam, "_GV_", Sys.Date(), ".pdf")
 
     staplr::set_fields(input_filepath = pdf_url,
+                       output_filepath = outpath,
                        fields = pdf_f,
                        overwrite = TRUE)
 
