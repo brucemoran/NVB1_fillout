@@ -216,7 +216,7 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
       if(rnid %in% c("Co_")){
         rnss <- tidyr::extract_numeric(rnss)
         if(length(rnss) > 10){
-          if(rnss[1] == 3 && rnss[2] = 5 && rnss[3] == 3){
+          if(rnss[1] == 3 && rnss[2] == 5 && rnss[3] == 3){
             rnss <- rnss[-c(1,2,3)]
           }
         )
