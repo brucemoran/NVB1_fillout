@@ -3,4 +3,5 @@ function(input, output, session) {
   obsev_FILENAMES(input, vals)
   obsev_manual(input, vals)
   obsev_go_fill_pdf(input, vals)
+  obsev_go_get_pdf(input, output, vals)
 }

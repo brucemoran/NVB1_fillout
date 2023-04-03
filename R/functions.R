@@ -252,23 +252,44 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
 
     ##output
     fnam <- paste(unlist(lapply(pdf_f[grep("Fn",names(pdf_f))], function(fc){if(fc$value!=""){fc$value}})), collapse = "")
-    snam <- paste(unlist(lapply(pdf_f[grep("Fn",names(pdf_f))], function(fc){if(fc$value!=""){fc$value}})), collapse = "")
-    outpath <- paste0(dirname(INPUT$FILENAMES$datapath[1]), "/",
+    snam <- paste(unlist(lapply(pdf_f[grep("Sn",names(pdf_f))], function(fc){if(fc$value!=""){fc$value}})), collapse = "")
+    VALS$outpath <- paste0(dirname(INPUT$FILENAMES$datapath[1]), "/",
                       fnam, "_", snam, "_GV_", Sys.Date(), ".pdf")
 
     staplr::set_fields(input_filepath = pdf_url,
-                       output_filepath = outpath,
+                       output_filepath = VALS$outpath,
                        fields = pdf_f,
                        overwrite = TRUE)
 
     shiny::showModal(
       shiny::modalDialog(
-        title = "Success, your PDF should be in the saved location",
+        title = "Success! Your PDF is available to Download:\n\n",
         easyClose = TRUE,
         footer = tagList(
-         shiny::modalButton("Continue")
+         shiny::downloadButton("go_get_pdf", "Download PDF")
         )
       )
     )
+  })
+}
+
+#' Allow use to donwload the PDF made and save to tmp
+#' @param INPUT session input
+#' @param OUTPUT session output
+#' @param VALS session values
+#' @return NULL
+#' @rdname obsev_go_get_pdf
+#' @export
+
+obsev_go_get_pdf <- function(INPUT, OUTPUT, VALS){
+  shiny::observeEvent(INPUT$go_get_pdf, {
+    OUTPUT$downloadData <- downloadHandler(
+    filename = function() {
+      basename(VALS$outpath)
+    },
+    content = function(file) {
+      VALS$outpath
+    }
+  )
   })
 }

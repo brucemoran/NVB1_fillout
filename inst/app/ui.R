@@ -1,6 +1,10 @@
 shiny::fluidPage(
   shiny::headerPanel("SI Garda Vetting NVB1 Filling Application"),
   shiny::sidebarLayout(
+    conditionalPanel(
+      "false", # always hide the download button for PDF
+      downloadButton("downloadData")
+    ),
     shiny::sidebarPanel(width=12,
                         shiny::splitLayout(
                           shiny::fileInput(
