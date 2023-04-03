@@ -42,7 +42,7 @@ obsev_manual <- function(INPUT, VALS){
 
   shiny::observeEvent(INPUT$manual, ignoreInit = TRUE, ignoreNULL = TRUE, {
 
-    csv_url <- "https://github.com/brucemoran/NVB1shiny/raw/master/inst/extdata/example_input.csv"
+    csv_url <- "https://github.com/brucemoran/NVB1shiny/raw/main/inst/extdata/example_input.csv"
     csv_tmp <- tempfile()
     utils::download.file(csv_url, csv_tmp)
     VALS$CSV <- readr::read_csv(csv_tmp)
@@ -189,7 +189,7 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
 
     shiny::removeModal()
     ##download file to fill
-    pdf_url <- "https://github.com/brucemoran/NVB1shiny/raw/master/inst/extdata/Garda_eVetting_SI_fillable.pdf"
+    pdf_url <- "https://github.com/brucemoran/NVB1shiny/raw/main/inst/extdata/Garda_eVetting_SI_fillable.pdf"
     pdf_tmp <- tempfile()
     utils::download.file(pdf_url, pdf_tmp, mode = "wb")
     pdf_f <- staplr::get_fields(pdf_tmp)
