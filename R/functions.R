@@ -187,7 +187,6 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
 
     shiny::removeModal()
     ##download file to fill
-    browser()
     pdf_url <- system.file(package = "NVB1shiny", "extdata", "Garda_eVetting_SI_fillable.pdf")
     pdf_f <- staplr::get_fields(pdf_url)
     ##what names in input are available to be split
