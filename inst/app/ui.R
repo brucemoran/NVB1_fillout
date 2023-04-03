@@ -1,5 +1,4 @@
 shiny::fluidPage(
-  shinyjs::useShinyjs(),
   shiny::headerPanel("SI Garda Vetting NVB1 Filling Application"),
   shiny::sidebarLayout(
     shiny::sidebarPanel(width=12,
