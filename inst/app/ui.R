@@ -13,7 +13,10 @@ shiny::fluidPage(
                             placeholder = NULL),
                           shiny::actionButton("manual", "Enter Data Manually")
                         ),
-                        shiny::downloadButton("downloadData", "Download", style = "visibility: hidden;")
+                        shiny::conditionalPanel(
+                          condition = "input.go_get_pdf == 1",
+                          shiny::downloadButton("downloadData", "Download PDF")
+                        )
     ),
     shiny::mainPanel()
   )

@@ -255,10 +255,10 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
     snam <- paste(unlist(lapply(pdf_f[grep("Sn",names(pdf_f))], function(fc){if(fc$value!=""){fc$value}})), collapse = "")
     VALS$outpath <- paste0(dirname(VALS$input_file), "/",
                       fnam, "_", snam, "_GV_", Sys.Date(), ".pdf")
-    print(paste0("Data saved: ", VALS$outpath))
     VALS$pdf_url <- pdf_url
     VALS$pdf_f <- pdf_f
-    VALS$tmp_out <- tempfile(fileext = "pdf")
+    VALS$tmp_out <- tempfile(fileext = ".pdf")
+    print(paste0("Data saved: ", VALS$tmp_out))
     staplr::set_fields(input_filepath = VALS$pdf_url,
                        output_filepath = VALS$tmp_out,
                        fields = VALS$pdf_f,
@@ -268,7 +268,7 @@ obsev_go_fill_pdf <- function(INPUT, VALS){
         title = "Success! Your PDF is available to Download:\n\n",
         easyClose = TRUE,
         footer = tagList(
-         shiny::actionButton("go_get_pdf", "Download PDF")
+         shiny::actionButton("go_get_pdf", "Let me get my PDF!")
         )
       )
     )
@@ -293,6 +293,6 @@ obsev_go_get_pdf <- function(INPUT, OUTPUT, VALS){
         file.copy(VALS$tmp_out, file)
       }
     )
-    shinyjs::runjs("document.getElementById('downloadData').click();")
+    shiny::removeModal()
   })
 }
